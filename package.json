@@ -1,6 +1,9 @@
 {
   "name": "myspacex",
-
+   "version": 2,
+  "buildCommand": "npm run build",
+  "builds": [{ "src": "src/server.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "src/server.js" }],
   "main": "index.js",
   "scripts": {
     "dev:css": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/styles.css --watch",
@@ -10,12 +13,6 @@
     "start": "node src/server.js",
     "build": "npm run build:css",
      "tw:build": "tailwindcss build -i ./public/css/tailwind.css -o ./public/css/main.css --watch"
-{
-  "version": 2,
-  "buildCommand": "npm run build",
-  "builds": [{ "src": "src/server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "src/server.js" }]
-}
 
   },
   "keywords": [],
