@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Scroll-reveal utilities (fade-up) ------------------------- */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .reveal-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Optional: text-stroke fallback class for headings ---------- */
+/* We use SVG for perfect gradient strokes, but this helps smaller headings */
+.stroke-text {
+  -webkit-text-stroke: 2px currentColor;
+  color: transparent;
+}

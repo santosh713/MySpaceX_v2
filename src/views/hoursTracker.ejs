@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <%- include('partials/head', { title: 'HoursTracker – MySpaceX' }) %>
+  <body class="bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 min-h-screen flex flex-col antialiased">
+    <%- include('partials/navbar') %>
+
+    <main class="max-w-7xl mx-auto px-6 lg:px-8 py-12 flex-1 w-full">
+      <!-- Page header -->
+      <header class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold
+                   bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+                   bg-clip-text text-transparent">
+          Hours Tracker
+        </h1>
+        <p class="text-gray-600 dark:text-neutral-300 mt-3">
+          Clock in/out in real time. If you forgot, add a shift manually.
+        </p>
+      </header>
+
+      <!-- Realtime status -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-6 text-center border border-neutral-200 dark:border-neutral-800">
+          <div class="text-sm text-gray-500 dark:text-neutral-400">Current Time</div>
+          <div id="now" class="text-2xl font-bold text-gray-900 dark:text-neutral-100">--:--:--</div>
+        </div>
+        <div class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-6 text-center border border-neutral-200 dark:border-neutral-800">
+          <div class="text-sm text-gray-500 dark:text-neutral-400">Status</div>
+          <div id="status" class="text-lg font-semibold text-gray-900 dark:text-neutral-100">Not clocked in</div>
+          <div id="since" class="text-sm text-gray-500 dark:text-neutral-400 mt-1"></div>
+        </div>
+        <div class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-6 flex items-center justify-center gap-3 border border-neutral-200 dark:border-neutral-800">
+          <button id="clockInBtn" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">
+            ▶ Clock In
+          </button>
+          <button id="clockOutBtn" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-neutral-100 hover:bg-gray-300 dark:hover:bg-neutral-700 transition"
+                  disabled>
+            ■ Clock Out
+          </button>
+        </div>
+      </section>
+
+      <!-- Manual add + actions -->
+      <section class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-6 mb-8 border border-neutral-200 dark:border-neutral-800">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="text-gray-700 dark:text-neutral-200">
+            Forgot to clock in or out?
+            <button id="toggleManual" class="text-indigo-600 hover:underline ml-1">Add a shift manually</button>
+          </div>
+          <div class="flex gap-2">
+            <button id="exportCsv"
+              class="inline-flex items-center px-3 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-100 hover:bg-gray-100 dark:hover:bg-neutral-800">
+              ⬇ Export CSV
+            </button>
+            <button id="clearAll"
+              class="inline-flex items-center px-3 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-[rgba(255,0,0,0.08)]">
+              🗑 Clear All
+            </button>
+          </div>
+        </div>
+
+        <form id="manualForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 hidden">
+          <div>
+            <label class="block text-sm text-gray-600 dark:text-neutral-400 mb-1" for="mDate">Date</label>
+            <input id="mDate" type="date" required
+              class="w-full rounded-lg border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 dark:text-neutral-400 mb-1" for="mStart">Start</label>
+            <input id="mStart" type="time" required
+              class="w-full rounded-lg border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 dark:text-neutral-400 mb-1" for="mEnd">End</label>
+            <input id="mEnd" type="time" required
+              class="w-full rounded-lg border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          <div class="flex items-end">
+            <button class="w-full px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">
+              Add Shift
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Summary cards -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-5 border border-neutral-200 dark:border-neutral-800">
+          <div class="text-sm text-gray-500 dark:text-neutral-400">Total Shifts</div>
+          <div id="sumShifts" class="text-2xl font-bold text-gray-900 dark:text-neutral-100">0</div>
+        </div>
+        <div class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-5 border border-neutral-200 dark:border-neutral-800">
+          <div class="text-sm text-gray-500 dark:text-neutral-400">Total Hours</div>
+          <div id="sumHours" class="text-2xl font-bold text-gray-900 dark:text-neutral-100">0.00</div>
+        </div>
+      </section>
+
+      <!-- Weekly Summary -->
+      <section class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow overflow-hidden mb-6 border border-neutral-200 dark:border-neutral-800">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900">
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Weekly Summary (Mon–Sun)</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
+            <thead class="bg-gray-50 dark:bg-neutral-900">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Week</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Total Hours</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Shifts</th>
+              </tr>
+            </thead>
+            <tbody id="weekBody" class="bg-white dark:bg-neutral-900 divide-y divide-gray-100 dark:divide-neutral-800"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Detail table -->
+      <section class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow overflow-hidden border border-neutral-200 dark:border-neutral-800">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
+            <thead class="bg-gray-50 dark:bg-neutral-900">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Date</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Start</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">End</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Hours</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-neutral-400 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="bg-white dark:bg-neutral-900 divide-y divide-gray-100 dark:divide-neutral-800"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Payday Controls -->
+      <section id="paydayControls" class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow p-6 my-6 border border-neutral-200 dark:border-neutral-800">
+        <div class="flex flex-col md:flex-row md:items-end gap-4">
+          <div>
+            <label class="block text-sm text-gray-600 dark:text-neutral-400 mb-1" for="paydayInput">
+              Known Payday (must be a Friday)
+            </label>
+            <input id="paydayInput" type="date"
+                   class="rounded-lg border-gray-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 focus:ring-indigo-500 focus:border-indigo-500">
+            <p class="text-xs text-gray-500 dark:text-neutral-400 mt-1">
+              We’ll use this to compute all bi-weekly pay periods (Mon–Sun × 2).
+            </p>
+          </div>
+          <button id="savePayday"
+                  class="h-10 px-4 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">
+            Save Payday
+          </button>
+          <button id="clearPayday"
+                  class="h-10 px-4 rounded-lg border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-100 hover:bg-gray-100 dark:hover:bg-neutral-800 transition">
+            Clear
+          </button>
+        </div>
+        <div id="nextPaydayInfo" class="mt-3 text-sm text-gray-700 dark:text-neutral-200"></div>
+      </section>
+
+      <!-- Pay Periods (collapsible groups) -->
+      <section class="bg-white/70 dark:bg-neutral-900/60 rounded-2xl shadow overflow-hidden mb-6 border border-neutral-200 dark:border-neutral-800">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900">
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Bi-Weekly Pay Periods</h2>
+          <p class="text-xs text-gray-500 dark:text-neutral-400">Mon–Sun, payday on Friday.</p>
+        </div>
+        <div id="payPeriods" class="p-0"></div>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <!-- Page-specific logic -->
+    <script src="/js/hoursTracker.js"></script>
+    <!-- Shared interactions (dark mode, menu) -->
+    <script src="/js/main.js"></script>
+  </body>
+</html>

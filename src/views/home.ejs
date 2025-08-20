@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <%- include('partials/head') %>
+  <body class="bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 antialiased">
+    <%- include('partials/navbar') %>
+
+    <!-- HERO -->
+    <header class="relative overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 pt-16 pb-24 md:pt-24 md:pb-28">
+        <!-- Gradient STROKE headline via SVG (transparent fill) -->
+        <div class="max-w-4xl">
+          <svg viewBox="0 0 1200 240" class="w-full h-auto">
+            <defs>
+              <linearGradient id="gradStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ff7a18"/>
+                <stop offset="50%" stop-color="#d946ef"/>
+                <stop offset="100%" stop-color="#6a00ff"/>
+              </linearGradient>
+            </defs>
+            <text x="0" y="170"
+              font-size="150"
+              font-weight="800"
+              fill="transparent"
+              stroke="url(#gradStroke)"
+              stroke-width="6"
+              letter-spacing="2">
+              MySpaceX
+            </text>
+          </svg>
+
+          <p class="mt-6 text-lg md:text-xl text-neutral-600 dark:text-neutral-300">
+            A modern, colorful starter built with Node.js, Express, EJS, and Tailwind.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#features" class="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-orange via-fuchsia-500 to-brand-purple text-white shadow-soft hover:opacity-95">
+              Explore Features
+            </a>
+            <a href="#" class="px-5 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- subtle gradient backdrop -->
+      <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-orange-50/60 to-transparent dark:via-purple-950/20"></div>
+    </header>
+
+    <!-- FEATURES (cards reveal on scroll) -->
+    <section id="features" class="max-w-6xl mx-auto px-4 pb-24">
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-8">Features</h2>
+      <p class="mb-10 text-neutral-600 dark:text-neutral-300">We’ll add real content later—these are placeholders.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Card 1 -->
+        <a href="/hoursTracker"
+   class="reveal rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-6 shadow-soft block hover:shadow-lg transition-shadow">
+  <h3 class="font-bold text-xl">Hours Tracker</h3>
+  <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Open page →</p>
+</a>
+
+
+        <!-- Card 2 -->
+         <a href="/paycalculator"
+   class="reveal rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-6 shadow-soft block hover:shadow-lg transition-shadow">
+  <h3 class="font-bold text-xl">Pay Calculator</h3>
+  <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Open page →</p>
+</a>
+        <!-- Card 3 -->
+        <article class="reveal rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-6 shadow-soft">
+          <h3 class="font-bold text-xl">Feature #3</h3>
+          <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Coming soon.</p>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="reveal rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-6 shadow-soft">
+          <h3 class="font-bold text-xl">Feature #4</h3>
+          <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Coming soon.</p>
+        </article>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/main.js"></script>
+  </body>
+</html>
