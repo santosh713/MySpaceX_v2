@@ -1,5 +1,3 @@
-// server.js (entry for Vercel)
+// server.js (Vercel entry)
 const app = require("./src/app");
-
-// Export the Express app; @vercel/node will treat it as a handler (req, res)
 module.exports = app;
